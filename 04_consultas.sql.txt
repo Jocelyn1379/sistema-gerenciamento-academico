@@ -1,0 +1,157 @@
+
+-- =====================================================
+-- PROJETO: Sistema de Gerenciamento Acadêmico
+-- ARQUIVO: 04_consultas.sql
+-- DESCRIÇÃO: Consultas e relatórios SQL
+-- =====================================================
+
+-- Seleciona o banco de dados utilizado no projeto.
+USE sistema_academico;
+
+-- =====================================================
+-- 1. LISTAR TODOS OS ALUNOS
+-- Retorna todos os registros cadastrados na tabela aluno.
+-- =====================================================
+
+SELECT * FROM aluno;
+
+-- =====================================================
+-- 2. DISCIPLINAS COM CARGA HORÁRIA SUPERIOR A 80 HORAS
+-- Utiliza WHERE para filtrar disciplinas pela carga horária.
+-- =====================================================
+
+SELECT nome, carga_horaria
+FROM disciplina
+WHERE carga_horaria > 80;
+
+-- =====================================================
+-- 3. LISTAR ALUNOS EM ORDEM ALFABÉTICA
+-- Utiliza ORDER BY para organizar os resultados pelo nome.
+-- ASC indica ordem crescente.
+-- =====================================================
+
+SELECT nome, cidade
+FROM aluno
+ORDER BY nome ASC;
+
+-- =====================================================
+-- 4. CONSULTAR ALUNOS E SUAS RESPECTIVAS TURMAS
+-- Utiliza INNER JOIN para relacionar matrículas, alunos,
+-- turmas e disciplinas, retornando somente registros
+-- que possuem correspondência entre as tabelas.
+-- =====================================================
+
+SELECT
+    a.nome AS aluno,
+    t.codigo_turma,
+    d.nome AS disciplina,
+    m.situacao
+FROM matricula m
+INNER JOIN aluno a
+    ON m.matricula_aluno = a.matricula
+INNER JOIN turma t
+    ON m.codigo_turma = t.codigo_turma
+INNER JOIN disciplina d
+    ON t.codigo_disc = d.codigo_disc
+ORDER BY a.nome;
+
+-- =====================================================
+-- 5. LISTAR PROFESSORES E DISCIPLINAS MINISTRADAS
+-- Relaciona professores, turmas e disciplinas,
+-- apresentando também o ano e o semestre de cada turma.
+-- =====================================================
+
+SELECT
+    p.nome AS professor,
+    d.nome AS disciplina,
+    t.ano,
+    t.semestre
+FROM turma t
+INNER JOIN professor p
+    ON t.codigo_prof = p.codigo_prof
+INNER JOIN disciplina d
+    ON t.codigo_disc = d.codigo_disc
+ORDER BY p.nome;
+
+-- =====================================================
+-- 6. QUANTIDADE DE ALUNOS POR TURMA
+-- Utiliza COUNT para contar as matrículas e GROUP BY
+-- para agrupar os resultados por turma e disciplina.
+-- LEFT JOIN permite incluir turmas mesmo sem matrículas.
+-- =====================================================
+
+SELECT
+    t.codigo_turma,
+    d.nome AS disciplina,
+    COUNT(m.matricula_aluno) AS total_alunos
+FROM turma t
+INNER JOIN disciplina d
+    ON t.codigo_disc = d.codigo_disc
+LEFT JOIN matricula m
+    ON t.codigo_turma = m.codigo_turma
+GROUP BY t.codigo_turma, d.nome
+ORDER BY total_alunos DESC;
+
+-- =====================================================
+-- 7. QUANTIDADE DE ALUNOS POR CIDADE
+-- Utiliza COUNT para contar os alunos e GROUP BY
+-- para agrupar os registros de acordo com a cidade.
+-- =====================================================
+
+SELECT
+    cidade,
+    COUNT(*) AS total_alunos
+FROM aluno
+GROUP BY cidade
+ORDER BY total_alunos DESC;
+
+-- =====================================================
+-- 8. CONSULTAR SOMENTE MATRÍCULAS ATIVAS
+-- Relaciona alunos, matrículas, turmas e disciplinas.
+-- WHERE filtra os registros cuja situação é "Ativa".
+-- =====================================================
+
+SELECT
+    a.nome AS aluno,
+    d.nome AS disciplina,
+    m.data_matricula
+FROM matricula m
+INNER JOIN aluno a
+    ON m.matricula_aluno = a.matricula
+INNER JOIN turma t
+    ON m.codigo_turma = t.codigo_turma
+INNER JOIN disciplina d
+    ON t.codigo_disc = d.codigo_disc
+WHERE m.situacao = 'Ativa'
+ORDER BY a.nome;
+
+-- =====================================================
+-- 9. DISCIPLINAS COM MAIS DE UMA TURMA
+-- GROUP BY agrupa as turmas por disciplina.
+-- COUNT contabiliza as turmas e HAVING filtra
+-- os grupos que possuem mais de uma turma.
+-- =====================================================
+
+SELECT
+    d.nome AS disciplina,
+    COUNT(t.codigo_turma) AS total_turmas
+FROM disciplina d
+INNER JOIN turma t
+    ON d.codigo_disc = t.codigo_disc
+GROUP BY d.codigo_disc, d.nome
+HAVING COUNT(t.codigo_turma) > 1;
+
+-- =====================================================
+-- 10. ALUNOS QUE AINDA NÃO POSSUEM MATRÍCULA
+-- LEFT JOIN permite identificar alunos sem registros
+-- correspondentes na tabela de matrículas.
+-- IS NULL filtra os alunos sem matrícula cadastrada.
+-- =====================================================
+
+SELECT
+    a.matricula,
+    a.nome
+FROM aluno a
+LEFT JOIN matricula m
+    ON a.matricula = m.matricula_aluno
+WHERE m.id_matricula IS NULL;

@@ -1,0 +1,83 @@
+
+-- =====================================================
+-- PROJETO: Sistema de Gerenciamento Acadêmico
+-- ARQUIVO: 03_insercao_dados.sql
+-- DESCRIÇÃO: Inserção de dados fictícios
+-- =====================================================
+
+-- Seleciona o banco de dados que receberá os registros.
+USE sistema_academico;
+
+-- =====================================================
+-- 1. INSERÇÃO DE ALUNOS
+-- Cadastra seis alunos com informações fictícias.
+-- =====================================================
+
+INSERT INTO aluno
+(matricula, nome, email, endereco, cidade, data_nascimento)
+VALUES
+(2024001, 'Ana Oliveira', 'ana@email.com', 'Rua das Flores, 120', 'João Pessoa', '2002-05-14'),
+(2024002, 'Pedro Santos', 'pedro@email.com', 'Av. Central, 450', 'Guarabira', '2001-08-22'),
+(2024003, 'Mariana Costa', 'mariana@email.com', 'Rua do Sol, 80', 'Natal', '2003-02-10'),
+(2024004, 'Lucas Almeida', 'lucas@email.com', 'Rua Nova, 35', 'Campina Grande', '2002-11-30'),
+(2024005, 'Beatriz Lima', 'beatriz@email.com', 'Av. Brasil, 200', 'João Pessoa', '2001-04-18'),
+(2024006, 'Rafael Souza', 'rafael@email.com', 'Rua da Paz, 90', 'Guarabira', '2003-07-09');
+
+-- =====================================================
+-- 2. INSERÇÃO DE PROFESSORES
+-- Cadastra três professores e suas especialidades.
+-- =====================================================
+
+INSERT INTO professor
+(codigo_prof, nome, email, especialidade)
+VALUES
+(101, 'Carlos Mendes', 'carlos@email.com', 'Banco de Dados'),
+(102, 'Fernanda Rocha', 'fernanda@email.com', 'Programação'),
+(103, 'Roberto Lima', 'roberto@email.com', 'Desenvolvimento Web');
+
+-- =====================================================
+-- 3. INSERÇÃO DE DISCIPLINAS
+-- Registra quatro disciplinas e suas cargas horárias.
+-- =====================================================
+
+INSERT INTO disciplina
+(codigo_disc, nome, carga_horaria)
+VALUES
+('BD', 'Banco de Dados Relacionais', 80),
+('POO', 'Programação Orientada a Objetos', 100),
+('WEB', 'Desenvolvimento Web', 60),
+('LOG', 'Lógica de Programação', 80);
+
+-- =====================================================
+-- 4. INSERÇÃO DE TURMAS
+-- Vincula disciplinas e professores a turmas,
+-- informando o ano, semestre e horário das aulas.
+-- =====================================================
+
+INSERT INTO turma
+(codigo_turma, codigo_disc, codigo_prof, ano, semestre, horario)
+VALUES
+(1, 'BD', 101, 2026, 1, '08:00 - 10:00'),
+(2, 'POO', 102, 2026, 1, '10:00 - 12:00'),
+(3, 'WEB', 103, 2026, 1, '13:00 - 15:00'),
+(4, 'LOG', 102, 2026, 1, '15:00 - 17:00'),
+(5, 'BD', 101, 2026, 2, '08:00 - 10:00');
+
+-- =====================================================
+-- 5. INSERÇÃO DE MATRÍCULAS
+-- Registra os alunos nas turmas e define a situação
+-- e a data de cada matrícula.
+-- =====================================================
+
+INSERT INTO matricula
+(matricula_aluno, codigo_turma, data_matricula, situacao)
+VALUES
+(2024001, 1, '2026-01-10', 'Ativa'),
+(2024002, 1, '2026-01-11', 'Ativa'),
+(2024003, 2, '2026-01-12', 'Ativa'),
+(2024004, 2, '2026-01-13', 'Concluida'),
+(2024005, 3, '2026-01-14', 'Ativa'),
+(2024006, 3, '2026-01-15', 'Ativa'),
+(2024001, 4, '2026-01-16', 'Ativa'),
+(2024003, 5, '2026-06-10', 'Ativa'),
+(2024005, 5, '2026-06-11', 'Ativa');

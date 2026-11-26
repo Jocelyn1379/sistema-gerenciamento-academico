@@ -1,0 +1,22 @@
+-- =====================================================
+-- PROJETO: Sistema de Gerenciamento Acadêmico
+-- ARQUIVO: 01_criacao_banco.sql
+-- DESCRIÇÃO: Criação do banco de dados
+-- =====================================================
+
+-- Cria o banco de dados caso ele ainda não exista.
+CREATE DATABASE IF NOT EXISTS sistema_academico
+CHARACTER SET utf8mb4
+COLLATE utf8mb4_unicode_ci;
+
+-- Define o banco de dados que será utilizado
+-- nos próximos comandos SQL.
+USE sistema_academico;
+
+
+
+-- =====================================================
+-- PROJETO: Sistema de Gerenciamento Acadêmico
+-- ARQUIVO: 01_criacao_banco.sql
+-- DESCRIÇÃO: Criação e seleção do banco de dados
+-- =====================================================

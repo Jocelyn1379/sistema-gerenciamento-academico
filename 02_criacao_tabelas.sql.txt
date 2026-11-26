@@ -1,0 +1,77 @@
+
+-- =====================================================
+-- PROJETO: Sistema de Gerenciamento Acadêmico
+-- ARQUIVO: 02_criacao_tabelas.sql
+-- DESCRIÇÃO: Criação das tabelas e relacionamentos
+-- =====================================================
+
+USE sistema_academico;
+
+-- 1. Tabela de alunos
+CREATE TABLE aluno (
+    matricula INT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    email VARCHAR(150) UNIQUE NOT NULL,
+    endereco VARCHAR(150),
+    cidade VARCHAR(80),
+    data_nascimento DATE
+);
+
+-- 2. Tabela de professores
+CREATE TABLE professor (
+    codigo_prof INT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    email VARCHAR(150) UNIQUE NOT NULL,
+    especialidade VARCHAR(100)
+);
+
+-- 3. Tabela de disciplinas
+CREATE TABLE disciplina (
+    codigo_disc VARCHAR(10) PRIMARY KEY,
+    nome VARCHAR(120) NOT NULL,
+    carga_horaria INT NOT NULL,
+    CONSTRAINT chk_carga_horaria
+        CHECK (carga_horaria > 0)
+);
+
+-- 4. Tabela de turmas
+CREATE TABLE turma (
+    codigo_turma INT PRIMARY KEY,
+    codigo_disc VARCHAR(10) NOT NULL,
+    codigo_prof INT NOT NULL,
+    ano INT NOT NULL,
+    semestre INT NOT NULL,
+    horario VARCHAR(30),
+
+    CONSTRAINT fk_turma_disciplina
+        FOREIGN KEY (codigo_disc)
+        REFERENCES disciplina(codigo_disc),
+
+    CONSTRAINT fk_turma_professor
+        FOREIGN KEY (codigo_prof)
+        REFERENCES professor(codigo_prof),
+
+    CONSTRAINT chk_semestre
+        CHECK (semestre IN (1, 2))
+);
+
+-- 5. Tabela de matrículas
+CREATE TABLE matricula (
+    id_matricula INT AUTO_INCREMENT PRIMARY KEY,
+    matricula_aluno INT NOT NULL,
+    codigo_turma INT NOT NULL,
+    data_matricula DATE NOT NULL,
+    situacao ENUM('Ativa', 'Cancelada', 'Concluida')
+        DEFAULT 'Ativa',
+
+    CONSTRAINT fk_matricula_aluno
+        FOREIGN KEY (matricula_aluno)
+        REFERENCES aluno(matricula),
+
+    CONSTRAINT fk_matricula_turma
+        FOREIGN KEY (codigo_turma)
+        REFERENCES turma(codigo_turma),
+
+    CONSTRAINT uq_aluno_turma
+        UNIQUE (matricula_aluno, codigo_turma)
+);
